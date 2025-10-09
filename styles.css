@@ -535,6 +535,8 @@ body {
   text-decoration: none;
   color: inherit;
   transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative; /* для підказки "Скопійовано" */
 }
 
 .contact-card:hover {
@@ -542,6 +544,44 @@ body {
   box-shadow: 0 16px 48px rgba(90, 125, 90, 0.2);
   border-color: var(--sage-400);
   background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(232, 237, 232, 0.8));
+}
+
+/* скидання дефолтного вигляду кнопки в різних браузерах */
+button.contact-card {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  background: transparent;
+}
+
+/* маленька підказка "Скопійовано" */
+.copy-feedback {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.95);
+  opacity: 0;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+/* видима стан */
+.copy-feedback.visible {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* невелика анімація появи */
+@keyframes popin {
+  from { transform: translateY(-6px) scale(0.95); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 .contact-icon {
