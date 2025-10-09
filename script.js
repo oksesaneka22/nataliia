@@ -39,16 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyButtons = document.querySelectorAll('.copy-btn');
 
   copyButtons.forEach(btn => {
+    // забезпечуємо фокус-так-відповідність без переходу
+    btn.setAttribute('type', 'button');
     btn.addEventListener('click', async (e) => {
       const value = btn.getAttribute('data-copy');
       if (!value) return;
 
-      // Спроба через сучасний clipboard API
+      // Копіювання
       try {
         await navigator.clipboard.writeText(value);
         showCopiedBadge(btn, 'Скопійовано');
       } catch (err) {
-        // Фолбек (старі браузери)
+        // Фолбек
         const ta = document.createElement('textarea');
         ta.value = value;
         ta.style.position = 'fixed';
@@ -63,26 +65,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         ta.remove();
       }
+
+      // Зберігаємо доступність: короткий візуальний фокус, але не видимий outline
+      btn.focus({ preventScroll: true });
     });
   });
 
   function showCopiedBadge(el, text) {
-    // видалити стару підказку, якщо є
+    // якщо є стара підказка — видаляємо її, щоб анімація перезапустилась
     const existing = el.querySelector('.copy-feedback');
-    if (existing) existing.remove();
+    if (existing) {
+      existing.remove();
+    }
 
     const span = document.createElement('span');
     span.className = 'copy-feedback';
+    span.setAttribute('role', 'status');
+    span.setAttribute('aria-live', 'polite');
     span.textContent = text;
     el.appendChild(span);
 
-    // дати час для layout і показати
+    // Примусово прочитати layout для перезапуску анімації
+    // (читання offsetHeight змушує браузер застосувати початкові стилі)
+    // eslint-disable-next-line no-unused-vars
+    const _force = span.offsetHeight;
+
+    // Додаємо клас visible в наступному кадрі для плавності
     requestAnimationFrame(() => span.classList.add('visible'));
 
-    // прибрати через 2 секунди
+    // Прибираємо через 2 секунди
     setTimeout(() => {
       span.classList.remove('visible');
-      setTimeout(() => span.remove(), 220);
+      // дочекаємось transition і видалимо елемент
+      setTimeout(() => {
+        if (span.parentNode) span.remove();
+      }, 260);
     }, 2000);
   }
 });
