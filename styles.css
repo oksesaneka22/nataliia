@@ -191,7 +191,7 @@ body {
   margin-bottom: 2rem;
 }
 
-.profile-photo-border {
+.profile-photo-border { /* кільце навколо фото */
   position: relative;
   padding: 4px; /* тонше кільце */
   background: linear-gradient(
