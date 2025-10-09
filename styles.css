@@ -193,21 +193,35 @@ body {
 
 .profile-photo-border {
   position: relative;
-  padding: 8px;
-  background: linear-gradient(135deg, var(--sage-400), var(--terracotta-400));
+  padding: 4px; /* тонше кільце */
+  background: linear-gradient(
+    135deg,
+    #071e11 0%,
+    #163b22 20%,
+    #2f6e3a 50%,
+    #58a04f 75%,
+    #c7f2d0 100%
+  );
   border-radius: 50%;
-  box-shadow: 0 20px 60px rgba(90, 125, 90, 0.3);
+  box-shadow: 0 12px 40px rgba(8, 28, 12, 0.45), inset 0 4px 12px rgba(255,255,255,0.03);
+  border: none; /* прибрано контур */
 }
 
 .profile-photo-border::before {
   content: "";
   position: absolute;
-  inset: -4px;
-  background: linear-gradient(135deg, var(--sage-300), var(--cream-300));
+  inset: -8px; /* трохи менший ореол */
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(88, 160, 79, 0.18),
+    rgba(36, 82, 46, 0.10) 35%,
+    rgba(13, 36, 18, 0.04) 55%,
+    transparent 75%
+  );
   border-radius: 50%;
   z-index: -1;
-  opacity: 0.5;
-  filter: blur(10px);
+  opacity: 0.9;
+  filter: blur(14px); /* менше блюру для чіткішого ореолу */
 }
 
 .profile-photo {
@@ -215,10 +229,16 @@ body {
   height: 160px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid var(--cream-50);
+  object-position: 50% 20%;
+  transform: scale(0.92); /* трохи більший, щоб менше видно кільце */
+  transition: transform 180ms ease;
+  background-color: var(--muted);
+  border: 2px solid var(--cream-50); /* тонший внутрішній кант */
   display: block;
+  padding: 3px; /* зменшено відступ між фото і кільцем */
 }
 
+/* larger sizes */
 @media (min-width: 768px) {
   .profile-photo {
     width: 200px;
