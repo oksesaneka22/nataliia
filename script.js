@@ -35,71 +35,50 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   })
 })
 
-document.addEventListener('DOMContentLoaded', () => {
-  const copyButtons = document.querySelectorAll('.copy-btn');
+document.addEventListener("DOMContentLoaded", () => {
+  const copyButtons = document.querySelectorAll(".copy-btn")
 
-  copyButtons.forEach(btn => {
-    // забезпечуємо фокус-так-відповідність без переходу
-    btn.setAttribute('type', 'button');
-    btn.addEventListener('click', async (e) => {
-      const value = btn.getAttribute('data-copy');
-      if (!value) return;
+  copyButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const value = button.dataset.copy
+      if (!value) return
 
-      // Копіювання
-      try {
-        await navigator.clipboard.writeText(value);
-        showCopiedBadge(btn, 'Скопійовано');
-      } catch (err) {
-        // Фолбек
-        const ta = document.createElement('textarea');
-        ta.value = value;
-        ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        try {
-          document.execCommand('copy');
-          showCopiedBadge(btn, 'Скопійовано');
-        } catch (e) {
-          showCopiedBadge(btn, 'Не вдалося');
-        }
-        ta.remove();
-      }
+      const copied = await copyToClipboard(value)
+      showCopiedBadge(button, copied ? "Скопійовано" : "Не вдалося скопіювати")
+    })
+  })
 
-      // Зберігаємо доступність: короткий візуальний фокус, але не видимий outline
-      btn.focus({ preventScroll: true });
-    });
-  });
-
-  function showCopiedBadge(el, text) {
-    // якщо є стара підказка — видаляємо її, щоб анімація перезапустилась
-    const existing = el.querySelector('.copy-feedback');
-    if (existing) {
-      existing.remove();
+  async function copyToClipboard(value) {
+    try {
+      await navigator.clipboard.writeText(value)
+      return true
+    } catch {
+      const textarea = document.createElement("textarea")
+      textarea.value = value
+      textarea.style.position = "fixed"
+      textarea.style.left = "-9999px"
+      document.body.appendChild(textarea)
+      textarea.select()
+      const copied = document.execCommand("copy")
+      textarea.remove()
+      return copied
     }
-
-    const span = document.createElement('span');
-    span.className = 'copy-feedback';
-    span.setAttribute('role', 'status');
-    span.setAttribute('aria-live', 'polite');
-    span.textContent = text;
-    el.appendChild(span);
-
-    // Примусово прочитати layout для перезапуску анімації
-    // (читання offsetHeight змушує браузер застосувати початкові стилі)
-    // eslint-disable-next-line no-unused-vars
-    const _force = span.offsetHeight;
-
-    // Додаємо клас visible в наступному кадрі для плавності
-    requestAnimationFrame(() => span.classList.add('visible'));
-
-    // Прибираємо через 2 секунди
-    setTimeout(() => {
-      span.classList.remove('visible');
-      // дочекаємось transition і видалимо елемент
-      setTimeout(() => {
-        if (span.parentNode) span.remove();
-      }, 260);
-    }, 2000);
   }
-});
+
+  function showCopiedBadge(element, text) {
+    element.querySelector(".copy-feedback")?.remove()
+
+    const feedback = document.createElement("span")
+    feedback.className = "copy-feedback"
+    feedback.setAttribute("role", "status")
+    feedback.textContent = text
+    element.appendChild(feedback)
+
+    requestAnimationFrame(() => feedback.classList.add("visible"))
+
+    setTimeout(() => {
+      feedback.classList.remove("visible")
+      setTimeout(() => feedback.remove(), 260)
+    }, 2000)
+  }
+})

@@ -666,144 +666,34 @@ body {
     background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(232, 237, 232, 0.8));
 }
 
-/* Contact card (button) — стилі для кнопки, щоб поводилась як картка */
 button.contact-card {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    background: transparent;
-    color: inherit;
     font: inherit;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-    text-align: left;
-    padding: 1rem;
-    border-radius: var(--radius);
-    position: relative;
-    /* для абсолютної підказки */
-    overflow: visible;
-    /* щоб підказка не обрізалась */
-    min-height: 56px;
-    /* запобігає "стисканню" картки при кліку */
-    transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
-    -webkit-tap-highlight-color: transparent;
+    text-align: inherit;
 }
 
-/* Збереження псевдоелемента .card::before на кнопках */
-button.contact-card::before {
-    pointer-events: none;
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    z-index: -1;
-    /* Якщо у вас є загальний .card::before — ці властивості забезпечать сумісність */
+button.contact-card:focus-visible {
+    outline: 3px solid var(--sage-500);
+    outline-offset: 4px;
 }
 
-/* Фокус/актив — показати акуратну обводку, не ховати фон */
-button.contact-card:focus {
-    outline: none;
-    box-shadow: 0 6px 20px rgba(37, 85, 37, 0.10), 0 0 0 4px rgba(90, 125, 90, 0.08);
-}
-
-/* При натисканні не застосовувати довготривалих трансформацій, щоб фрейм не зник */
-button.contact-card:active {
-    transform: translateY(0);
-    /* прибираємо сильні зсуви на :active */
-}
-
-/* Copy feedback badge — позиціонована абсолютно щоб не впливати на макет */
 .copy-feedback {
     position: absolute;
     top: 10px;
     right: 12px;
-    background: var(--accent);
-    color: var(--accent-foreground);
+    z-index: 1;
     padding: 0.28rem 0.64rem;
     border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-foreground);
     font-size: 0.75rem;
     font-weight: 600;
     pointer-events: none;
     transform: translateY(-6px) scale(0.96);
     opacity: 0;
     transition: opacity 180ms ease, transform 180ms ease;
-    will-change: transform, opacity;
-    z-index: 5;
 }
 
-/* Видима стан — запускає анімацію */
 .copy-feedback.visible {
     transform: translateY(0) scale(1);
     opacity: 1;
-    transition: opacity 220ms cubic-bezier(.2, .9, .2, 1), transform 220ms cubic-bezier(.2, .9, .2, 1);
-}
-
-/* Легка анімація появи для сумісності */
-@keyframes popin {
-    from {
-        transform: translateY(-6px) scale(0.96);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-}
-
-/* Забезпечуємо, що псевдоелементи .card::before завжди видно (якщо у вас є стилі .card::before) */
-.card::before {
-    pointer-events: none;
-    /* збережіть ваші фон/градієнт тут; важливо, щоб інші стани не ховали його */
-}
-
-/* Забезпечуємо, що кнопки з класом .card виглядають як інші картки */
-button.card,
-.card {
-    background: var(--card);
-    color: var(--card-foreground);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 6px 18px rgba(38, 53, 38, 0.06);
-    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-}
-
-/* Якщо у вас існує .card::before — зберігаємо його видимість на кнопках */
-button.card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    z-index: -1;
-    pointer-events: none;
-    /* Якщо у .card::before заданий градієнт — можна повторити тут або дозволити .card::before працювати */
-}
-
-/* Додаємо пріоритетні стилі для contact-карток щоб не ховати рамку при :active */
-button.contact-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    box-shadow: 0 6px 18px rgba(38, 53, 38, 0.06);
-    transform: none;
-    /* уникаємо сильних зсувів на клік */
-    overflow: visible;
-}
-
-/* Фокус/актив — зберігаємо рамку і тінь */
-button.contact-card:focus,
-button.contact-card:active {
-    outline: none;
-    box-shadow: 0 8px 22px rgba(38, 53, 38, 0.10), 0 0 0 4px rgba(90, 125, 90, 0.06);
-    transform: translateY(0);
-}
-
-/* Підказка не повинна перекривати рамку картки */
-.copy-feedback {
-    z-index: 6;
-    right: 12px;
-    top: 10px;
 }
